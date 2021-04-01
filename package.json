@@ -1,0 +1,38 @@
+{
+  "scripts": {
+    "start": "snowpack dev",
+    "build": "snowpack build",
+    "watch": "snowpack build --watch",
+    "server": "nodemon -e '*' --watch content --watch server --exec \"babel-node server -x '.js','.jsx' --config-file ./babel-ssr.config.json\" ",
+    "test": "web-test-runner \"src/**/*.test.tsx\"",
+    "format": "prettier --write \"src/**/*.{js,jsx}\"",
+    "lint": "prettier --check \"src/**/*.{js,jsx}\""
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "preact": "^10.5.13",
+    "webpack-modules": "^1.0.0"
+  },
+  "devDependencies": {
+    "@babel/node": "^7.13.13",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-transform-react-jsx": "^7.13.12",
+    "@babel/preset-env": "^7.13.12",
+    "@babel/preset-react": "^7.13.13",
+    "@prefresh/snowpack": "^3.1.2",
+    "@snowpack/plugin-dotenv": "^2.0.5",
+    "@snowpack/plugin-typescript": "^1.2.1",
+    "@snowpack/web-test-runner-plugin": "^0.2.2",
+    "@testing-library/preact": "^2.0.1",
+    "@types/chai": "^4.2.15",
+    "@web/test-runner": "^0.12.17",
+    "babel-node": "0.0.1-security",
+    "chai": "^4.3.4",
+    "htm": "^3.0.4",
+    "nodemon": "^2.0.7",
+    "preact-render-to-string": "^5.1.16",
+    "prettier": "^2.2.1",
+    "snowpack": "^3.1.2",
+    "typescript": "^4.2.3"
+  }
+}
