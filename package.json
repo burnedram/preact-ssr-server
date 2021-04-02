@@ -3,7 +3,7 @@
     "start": "snowpack dev",
     "build": "snowpack build",
     "watch": "snowpack build --watch",
-    "server": "nodemon -e '*' --watch content --watch server --exec \"babel-node server -x '.js','.jsx' --config-file ./babel-ssr.config.json\" ",
+    "server": "nodemon --watch server.js --unhandled-rejections=strict server.js",
     "test": "web-test-runner \"src/**/*.test.tsx\"",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
     "lint": "prettier --check \"src/**/*.{js,jsx}\""

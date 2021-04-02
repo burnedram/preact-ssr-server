@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import logo from './logo.png';
 import './App.css';
+import SimpleClassProps from './Simple';
 
 function App() {
   // Create the count state.
@@ -32,6 +33,7 @@ function App() {
             Learn Preact
           </a>
         </p>
+        <SimpleClassProps message="no ssr"></SimpleClassProps>
       </header>
     </div>
   );
