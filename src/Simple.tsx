@@ -39,9 +39,9 @@ export class SimpleClassProps extends Component<SimpleProps, SimpleState> {
 
   constructor(props: SimpleProps) {
     super(props);
-    this.setState({
+    this.state = {
       message: this.props.message,
-    });
+    };
   }
 
   ref: HTMLDivElement | null = null;
