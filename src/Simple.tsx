@@ -17,7 +17,7 @@ export const SimpleFunctionProps: FunctionComponent<SimpleProps> = function Simp
   const [state, setState] = useState<SimpleState>({ message: props.message });
   return (
     <div>
-      func {state.message}
+      This is a <i>functional</i> component: {state.message}
       <button
         onClick={() => setState({ message: `${state.message}${props.append}` })}
       >
@@ -27,14 +27,14 @@ export const SimpleFunctionProps: FunctionComponent<SimpleProps> = function Simp
   );
 };
 SimpleFunctionProps.defaultProps = {
-  message: 'Tjenna',
-  append: '_',
+  message: 'Default message',
+  append: '.',
 };
 
 export class SimpleClassProps extends Component<SimpleProps, SimpleState> {
   static defaultProps = {
-    message: 'Tjenna',
-    append: '_',
+    message: 'Default message',
+    append: '.',
   };
 
   constructor(props: SimpleProps) {
@@ -44,10 +44,13 @@ export class SimpleClassProps extends Component<SimpleProps, SimpleState> {
     });
   }
 
+  ref: HTMLDivElement | null = null;
+  setRef = (ref: HTMLDivElement | null) => (this.ref = ref);
+
   render() {
     return (
-      <div>
-        class {this.state.message ?? 'Tjenna'}
+      <div ref={this.setRef}>
+        This is a <i>class</i> component: {this.state.message}
         <button
           onClick={() =>
             this.setState({
@@ -57,14 +60,18 @@ export class SimpleClassProps extends Component<SimpleProps, SimpleState> {
         >
           click me
         </button>
-        <SimpleFunctionProps message="nä" append="+"></SimpleFunctionProps>
+        <SimpleFunctionProps
+          message="And i'm nested!"
+          append="+"
+        ></SimpleFunctionProps>
       </div>
     );
   }
 
   componentDidMount() {
-    console.log('mount');
-    this.setState({ message: this.state.message + ' ~mounted~' });
+    console.log('componentDidMount', this.ref);
+    // Stupid side effect, but it get componentDidMount() across.
+    if (this.ref !== null) this.ref.style.background = 'beige';
   }
 }
 
