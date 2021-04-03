@@ -101,10 +101,12 @@ async function main() {
     // rel="prefetch", rel="preload" and rel="modulepreload".
     // This is a shame, but we will hijack this header to indicate external resources
     // that will need to be injected in the <head> by the upstream server.
-    res.links({ stylesheet: '/dist/index.css' });
+    res.links({ prefetch: '/dist/index.css', stylesheet: '/dist/index.css' });
     console.log('css:', componentModule.css);
     if (componentModule.css) {
-      componentModule.css.forEach((css) => res.links({ stylesheet: css }));
+      componentModule.css.forEach((css) =>
+        res.links({ prefetch: css, stylesheet: css }),
+      );
     }
 
     let links = res.get('Link') || '';
