@@ -16,8 +16,16 @@ async function main() {
   const config = await loadConfiguration(
     {
       devOptions: {
-        port: 0, // Don't start a HTTP server for SnowpackDevServer
+        // Don't start a HTTP server for SnowpackDevServer
+        port: 0,
+
+        // Disable HMR, won't work with our custom code
+        // Also disables @prefresh/snowpack (https://github.com/JoviDeCroock/prefresh/blob/ba56343d001adf649d4816f9919fcc9e0af85579/packages/snowpack/src/index.js#L17)
+        // Disabling prefresh is kind of important, as it would otherwise
+        // create multiple transform() steps for our .css.proxy.js remover plugin
+        hmr: false,
       },
+      plugins: ['./remove-css-proxies.ts'],
     },
     'snowpack.config.js',
   );

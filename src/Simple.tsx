@@ -2,6 +2,8 @@ import { Component, h } from 'preact';
 import type { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
 
+import './Simple.css';
+
 type SimpleProps = {
   message: string;
   append: string;

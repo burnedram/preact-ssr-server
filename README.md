@@ -43,6 +43,14 @@ you must pass properties containing `export` via a JSON `POST` request.
 A HTTP `Link` header is generated hinting the browser to preload the component's module and CSS.  
 `index.js` is also present in the header, as it is required for hydration.
 
+### Removal of .css.proxy.js files
+
+We want CSS to be loaded from the original source files, not injected by JavaScript on the client side.  
+`remove-css-proxies.ts` contains a Snowpack plugin that removes all CSS imports, effectivly neutering  
+Snowpack's default CSS proxy behaviour.
+
+No CSS will be injected by the components at runtime!
+
 ## What's left to implement
 
 ### Module dependency tree preloading
@@ -50,11 +58,6 @@ A HTTP `Link` header is generated hinting the browser to preload the component's
 Although `rel="modulepreload"` might trigger a preload of the complete dependency tree, this is up to the browser.  
 We could use `es-module-lexer` or something similair to generate of flat list of all dependencies.  
 Unclear if this would work for CSS.
-
-### Remove .css.proxy.js files
-
-We want CSS to be loaded from the original source files, not injected by JavaScript on the client side.  
-Will probably need some kind of Snowpack plugin that removes `.css.proxy.js` files and all related imports.
 
 ### Break free from SnowpackDevServer
 

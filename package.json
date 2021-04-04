@@ -3,7 +3,7 @@
     "start": "snowpack dev",
     "build": "snowpack build",
     "watch": "snowpack build --watch",
-    "server": "cross-env TS_NODE_PROJECT=server.tsconfig.json nodemon -e js,ts --watch server.ts --watch snowpack.config.js --exec node --unhandled-rejections=strict -r ts-node/register -r ./server.ts",
+    "server": "cross-env TS_NODE_PROJECT=server.tsconfig.json nodemon -e js,ts --watch server.ts --watch snowpack.config.js --watch remove-css-proxies.ts --exec node --unhandled-rejections=strict -r ts-node/register -r ./server.ts",
     "test": "web-test-runner \"src/**/*.test.tsx\"",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
     "lint": "prettier --check \"src/**/*.{js,jsx}\""

@@ -1,8 +1,9 @@
 {
     "extends": "./tsconfig.json",
-    "include": [],
+    "include": ["./server.ts", "./remove-css-proxies.ts"],
     "exclude": [],
     "compilerOptions": {
-        "module": "CommonJS"
+        "module": "CommonJS",
+        "noEmit": false
     }
 }
