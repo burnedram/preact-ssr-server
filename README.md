@@ -13,13 +13,13 @@ These can then be used by upstream frameworks to interleave static content with 
 Components are server-side rendered by using the `/render/` endpoint.
 
 Example: View the original bootstrapped application by visiting  
-[/render/dist/App.js](http://localhost:8081/render/dist/App.js)
+[/render/dist/App.js](http://localhost:8080/render/dist/App.js)
 with the server running.
 
 Tip: Add an `export` query parameter to specify which exported component to render. By default the `default` export is used.
 
 Example: View the `SimpleFunctionProps` component by visiting  
-[Simple.js?export=SimpleFunctionProps](http://localhost:8081/render/dist/Simple.js?export=SimpleFunctionProps)
+[Simple.js?export=SimpleFunctionProps](http://localhost:8080/render/dist/Simple.js?export=SimpleFunctionProps)
 with the server running.
 
 ### Client-side hydration
@@ -32,7 +32,7 @@ Component properties are correctly used when server-side rendering, and when hyd
 Properties can be defined by either using query parameters on `GET` requests, or by JSON on `POST` requests.
 
 Example: Change the `message` property of the `SimpleClassProps` component by visiting  
-[Simple.js?message=Hello world!](http://localhost:8081/render/dist/Simple.js?message=Hello%20world!)
+[Simple.js?message=Hello world!](http://localhost:8080/render/dist/Simple.js?message=Hello%20world!)
 with the server running.
 
 Note: Due to the `export` query parameter being used for a specific purpose,  
@@ -74,8 +74,7 @@ Not yet tested, but we will probably have to handle server-side changes on the s
 
 ### npm run server
 
-Runs the server-side renderer server on port `8081`.  
-Currently, Snowpack's dev server also runs along side it on port `8080`, serving the same content as `npm start` does.
+Runs the server-side renderer server on port `8080`.
 
 Test it out by using the `/render/` endpoint.
 

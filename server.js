@@ -5,7 +5,14 @@ const isDev = true;
 
 async function main() {
   // Start a SnowpackDevServer, building files on the fly
-  const config = await loadConfiguration({}, 'snowpack.config.js');
+  const config = await loadConfiguration(
+    {
+      devOptions: {
+        port: 0, // Don't start a HTTP server for SnowpackDevServer
+      },
+    },
+    'snowpack.config.js',
+  );
   const snowpackServer = await startServer(
     { config, lockfile: null },
     {
@@ -146,8 +153,8 @@ async function main() {
   //app.use('/', express.static('build'));
   app.use('/', snowpackServer.handleRequest);
 
-  app.listen(8081, '127.0.0.1', () => {
-    console.log('Server running at http://127.0.0.1:8081');
+  app.listen(8080, '127.0.0.1', () => {
+    console.log('Server running at http://127.0.0.1:8080');
   });
 }
 
