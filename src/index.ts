@@ -1,4 +1,4 @@
-import { h, render, hydrate } from 'preact';
+import { h, render, hydrate, Component } from 'preact';
 import type { ComponentType } from 'preact';
 import 'preact/devtools';
 import './index.css';
@@ -58,6 +58,18 @@ const main = async () => {
         componentModule,
       );
       throw new Error(`'${componentUrl}' does not export '${componentExport}'`);
+    }
+
+    if (!(component instanceof Component) && typeof component !== 'function') {
+      console.error(
+        `'${componentUrl}#${componentExport}' is not a component\nAssociated script element:`,
+        scriptComponent,
+        '\nAssociated module:',
+        componentModule,
+      );
+      throw new Error(
+        `'${componentUrl}#${componentExport}' is not a component`,
+      );
     }
 
     const props = JSON.parse(scriptComponent.innerHTML);

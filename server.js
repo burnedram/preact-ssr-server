@@ -94,6 +94,13 @@ async function main() {
     }
     const component = componentModule.exports[moduleExport];
 
+    if (!(component instanceof Component) && typeof component !== 'function') {
+      res.status(404).json({
+        error: { message: `'${moduleUrl}#${moduleExport}' is not a component` },
+      });
+      return;
+    }
+
     // Render your react component to HTML
     const renderedHtml = render(h(component, props));
 
