@@ -46,8 +46,6 @@ async function main() {
   app.use(express.json());
 
   app.use('/render/:module(*)', async (req, res) => {
-    const moduleUrl = `/${req.params.module}`;
-    console.log('moduleUrl:', moduleUrl);
     let props = null;
     if (req.method === 'GET') {
       props = { ...req.query };
@@ -75,6 +73,27 @@ async function main() {
     }
     console.log('props:', props);
 
+    const moduleUrl = `/${req.params.module}`;
+    console.log('moduleUrl:', moduleUrl);
+    if (!moduleUrl) {
+      res.status(400).json({
+        error: {
+          message: 'Please specify a module',
+        },
+      });
+    }
+
+    const moduleExport = req.query.export ?? 'default';
+    console.log('moduleExport:', moduleExport);
+    if (typeof moduleExport !== 'string') {
+      res.status(400).json({
+        error: {
+          message: "Query parameter 'export' must be a string",
+        },
+      });
+      return;
+    }
+
     // Server-side import our React component
     let componentModule;
     try {
@@ -91,11 +110,9 @@ async function main() {
       return;
     }
 
-    const moduleExport = req.query.export ?? 'default';
-    console.log('moduleExport:', moduleExport);
     if (!(moduleExport in componentModule.exports)) {
       res.status(404).json({
-        error: { message: `${moduleUrl} does not export ${moduleExport}` },
+        error: { message: `'${moduleUrl}' does not export '${moduleExport}'` },
       });
       return;
     }
