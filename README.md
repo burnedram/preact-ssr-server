@@ -56,10 +56,6 @@ Unclear if this would work for CSS.
 We want CSS to be loaded from the original source files, not injected by JavaScript on the client side.  
 Will probably need some kind of Snowpack plugin that removes `.css.proxy.js` files and all related imports.
 
-### Convert server.js to server.ts
-
-TypeScript is neat, we should use it.
-
 ### Break free from SnowpackDevServer
 
 In theory, we should only need the output from `npm run build` to do server-side rendering.  

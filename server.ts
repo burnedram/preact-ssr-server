@@ -1,5 +1,13 @@
-const { loadConfiguration, startServer } = require('snowpack');
-const express = require('express');
+import { loadConfiguration, ServerRuntimeModule, startServer } from 'snowpack';
+import * as express from 'express';
+
+import { Component } from 'preact';
+import type preactType from 'preact';
+import type * as preactRenderToStringType from 'preact-render-to-string';
+
+type ComponentModule = {
+  [index: string]: preactType.ComponentType<any>;
+};
 
 const isDev = true;
 
@@ -22,9 +30,11 @@ async function main() {
   );
   const runtime = snowpackServer.getServerRuntime();
 
-  async function importPackage(package) {
-    const url = await snowpackServer.getUrlForPackage(package);
-    const module = await runtime.importModule(url);
+  async function importPackage<T>(
+    pkg: string,
+  ): Promise<ServerRuntimeModule<T>> {
+    const url = await snowpackServer.getUrlForPackage(pkg);
+    const module = await runtime.importModule<T>(url);
     return module;
   }
 
@@ -32,14 +42,16 @@ async function main() {
   // This is not strictly necessary, a normal
   // const { h } = require('preact');
   // also works, but why import it twice :)
-  const preact = await importPackage('preact');
+  const preact = await importPackage<typeof preactType>('preact');
   const h = preact.exports.h;
 
   // "import" render from 'preact-render-to-string';
   // This is necessary, as a normal
   // const render = require('preact-render-to-string');
   // doesn't work for some strange arcane reason.
-  const preactRenderToString = await importPackage('preact-render-to-string');
+  const preactRenderToString = await importPackage<
+    typeof preactRenderToStringType
+  >('preact-render-to-string');
   const render = preactRenderToString.exports.default;
 
   const app = express();
@@ -95,9 +107,9 @@ async function main() {
     }
 
     // Server-side import our React component
-    let componentModule;
+    let componentModule: ServerRuntimeModule<ComponentModule>;
     try {
-      componentModule = await runtime.importModule(moduleUrl);
+      componentModule = await runtime.importModule<ComponentModule>(moduleUrl);
     } catch (error) {
       if (error.constructor?.name === 'NotFoundError') {
         res.status(404).json({ error: { message: error.message } });
@@ -168,7 +180,9 @@ async function main() {
   // We could serve statically built files, but for now
   // simply forward 'normal' requests to snowpack.
   //app.use('/', express.static('build'));
-  app.use('/', snowpackServer.handleRequest);
+  app.use('/', async (req, res) => {
+    await snowpackServer.handleRequest(req, res);
+  });
 
   app.listen(8080, '127.0.0.1', () => {
     console.log('Server running at http://127.0.0.1:8080');

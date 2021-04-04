@@ -3,7 +3,7 @@
     "start": "snowpack dev",
     "build": "snowpack build",
     "watch": "snowpack build --watch",
-    "server": "nodemon --watch server.js --unhandled-rejections=strict server.js",
+    "server": "cross-env TS_NODE_PROJECT=server.tsconfig.json nodemon -e js,ts --watch server.ts --watch snowpack.config.js --exec node --unhandled-rejections=strict -r ts-node/register -r ./server.ts",
     "test": "web-test-runner \"src/**/*.test.tsx\"",
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
     "lint": "prettier --check \"src/**/*.{js,jsx}\""
@@ -28,11 +28,14 @@
     "@web/test-runner": "^0.12.17",
     "babel-node": "0.0.1-security",
     "chai": "^4.3.4",
+    "cross-env": "^7.0.3",
+    "es-module-lexer": "^0.4.1",
     "htm": "^3.0.4",
     "nodemon": "^2.0.7",
     "preact-render-to-string": "^5.1.16",
     "prettier": "^2.2.1",
     "snowpack": "^3.1.2",
+    "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
   }
 }
