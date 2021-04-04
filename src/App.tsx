@@ -12,6 +12,9 @@ function App() {
     const timer = setTimeout(() => setCount(count + 1), 1000);
     return () => clearTimeout(timer);
   }, [count, setCount]);
+
+  const [show, setShow] = useState(true);
+
   // Return the App component.
   return (
     <div className="App">
@@ -33,7 +36,13 @@ function App() {
             Learn Preact
           </a>
         </p>
-        <SimpleClassProps message="no ssr"></SimpleClassProps>
+        {show ? <SimpleClassProps message="no ssr"></SimpleClassProps> : null}
+        <label>Show SimpleClassProps</label>
+        <input
+          type="checkbox"
+          checked={show}
+          onChange={(e) => setShow(e.currentTarget.checked)}
+        />
       </header>
     </div>
   );

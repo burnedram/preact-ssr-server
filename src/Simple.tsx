@@ -1,6 +1,6 @@
-import { Component, h } from 'preact';
+import { Component, h, Ref } from 'preact';
 import type { FunctionComponent } from 'preact';
-import { useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import './Simple.css';
 
@@ -17,8 +17,22 @@ export const SimpleFunctionProps: FunctionComponent<SimpleProps> = function Simp
   props,
 ) {
   const [state, setState] = useState<SimpleState>({ message: props.message });
+  const [ref, setRef] = useState<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (ref !== null) {
+      console.log('Function component mounting', ref);
+      ref.style.background = 'turquoise';
+    }
+    return () => {
+      if (ref !== null) {
+        console.log('Function component unmounting', ref);
+        ref.style.background = '';
+      }
+    };
+  }, [ref, setRef]);
   return (
-    <div>
+    <div ref={setRef}>
       This is a <i>functional</i> component: {state.message}
       <button
         onClick={() => setState({ message: `${state.message}${props.append}` })}
@@ -74,6 +88,11 @@ export class SimpleClassProps extends Component<SimpleProps, SimpleState> {
     console.log('componentDidMount', this.ref);
     // Stupid side effect, but it get componentDidMount() across.
     if (this.ref !== null) this.ref.style.background = 'beige';
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount', this.ref);
+    if (this.ref !== null) this.ref.style.background = '';
   }
 }
 
