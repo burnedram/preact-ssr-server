@@ -72,7 +72,9 @@ const main = async () => {
       );
     }
 
-    const props = JSON.parse(scriptComponent.innerHTML);
+    const props =
+      (scriptComponent.innerHTML && JSON.parse(scriptComponent.innerHTML)) ??
+      undefined;
     scriptComponent.remove();
 
     if (componentParent.childElementCount !== 1) {

@@ -180,7 +180,7 @@ async function main() {
   <div>
     <script type="application/json" data-module="${moduleUrl}"${
       moduleExport === 'default' ? '' : ` data-export="${moduleExport}"`
-    }>${JSON.stringify(props)}</script>
+    }>${(props && JSON.stringify(props)) ?? ''}</script>
     ${renderedHtml}
   </div>
 </body>`);
