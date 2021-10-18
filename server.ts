@@ -135,6 +135,22 @@ async function main() {
       }
       return;
     }
+    let indexComponentModule: ServerRuntimeModule<ComponentModule>;
+    try {
+      indexComponentModule = await runtime.importModule<ComponentModule>(
+        '/dist/index.js',
+      );
+    } catch (error) {
+      if (error.constructor?.name === 'NotFoundError') {
+        res.status(404).json({ error: { message: error.message } });
+      } else {
+        console.error(error);
+        res
+          .status(500)
+          .json({ error: { message: error.message, stack: error.stack } });
+      }
+      return;
+    }
 
     if (!(moduleExport in componentModule.exports)) {
       res.status(404).json({
@@ -156,15 +172,9 @@ async function main() {
 
     // The Link header is not really supported by browsers, except with
     // rel="prefetch", rel="preload" and rel="modulepreload".
-    // This is a shame, but we will hijack this header to indicate external resources
-    // that will need to be injected in the <head> by the upstream server.
-    res.links({ prefetch: '/dist/index.css', stylesheet: '/dist/index.css' });
-    console.log('css:', componentModule.css);
-    if (componentModule.css) {
-      componentModule.css.forEach((css) =>
-        res.links({ prefetch: css, stylesheet: css }),
-      );
-    }
+    const css = new Set([...indexComponentModule.css, ...componentModule.css]);
+    console.log('css:', css);
+    css.forEach((css) => res.links({ prefetch: css }));
 
     const loadImportTree: (url: string) => Promise<Import> = async (url) => {
       const { imports } = await snowpackServer.loadUrl(url, {
@@ -215,6 +225,9 @@ async function main() {
 
     res.send(`<head>
   <script type="module" src="/dist/index.js" async></script>
+  ${[...css]
+    .map((stylesheet) => `<link rel="stylesheet" href="${stylesheet}">`)
+    .join('\n  ')}
 </head>
 
 <body>

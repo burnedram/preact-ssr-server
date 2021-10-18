@@ -89,20 +89,22 @@ const main = async () => {
   }
 };
 
-if (document.readyState === 'loading') {
-  //main();
-} else {
-  const onReadyStateChanged = () => {
-    document.removeEventListener('readystatechange', onReadyStateChanged);
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
     //main();
-  };
-  document.addEventListener('readystatechange', onReadyStateChanged);
-}
+  } else {
+    const onReadyStateChanged = () => {
+      document.removeEventListener('readystatechange', onReadyStateChanged);
+      //main();
+    };
+    document.addEventListener('readystatechange', onReadyStateChanged);
+  }
 
-const hydrateBtn = document.createElement('button');
-hydrateBtn.onclick = () => {
-  hydrateBtn.remove();
-  main();
-};
-hydrateBtn.appendChild(document.createTextNode('Hydrate'));
-document.body.appendChild(hydrateBtn);
+  const hydrateBtn = document.createElement('button');
+  hydrateBtn.onclick = () => {
+    hydrateBtn.remove();
+    main();
+  };
+  hydrateBtn.appendChild(document.createTextNode('Hydrate'));
+  document.body.appendChild(hydrateBtn);
+}
