@@ -14,7 +14,7 @@ const RemoveCssProxiesFactory: SnowpackPluginFactory<void> = function RemoveCssP
   return {
     name: 'RemoveCssProxies',
     async transform(options) {
-      const { id, contents, isDev, isPackage, fileExt, isSSR } = options;
+      const { contents, isPackage, fileExt, isSSR } = options;
 
       // When isSSR is set we leave CSS proxies alone,
       // this allows our server to be notified about imported CSS
