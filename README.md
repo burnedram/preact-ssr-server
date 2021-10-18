@@ -51,13 +51,13 @@ Snowpack's default CSS proxy behaviour.
 
 No CSS will be injected by the components at runtime!
 
-## What's left to implement
-
 ### Module dependency tree preloading
 
-Although `rel="modulepreload"` might trigger a preload of the complete dependency tree, this is up to the browser.  
-We could use `es-module-lexer` or something similair to generate of flat list of all dependencies.  
-Unclear if this would work for CSS.
+All script dependencies required for hydrating/rendering a given component are preloaded using `rel="modulepreload"`. This is done by querying `SnowpackDevServer` for imports of individual files, starting with the component that we want to render (and `index.ts`, as it is required for bootstrapping the client side).
+
+All css dependencies required for a given component are prefetch using `rel="prefetch"`. This is done by querying the runtime of `SnowpackDevServer`, as it gives us all css files in one go.
+
+## What's left to implement
 
 ### Break free from SnowpackDevServer
 
