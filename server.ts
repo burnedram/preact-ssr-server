@@ -9,6 +9,11 @@ type ComponentModule = {
   [index: string]: preactType.ComponentType<any>;
 };
 
+interface Import {
+  url: string;
+  imports?: Import[];
+}
+
 const isDev = true;
 
 async function main() {
@@ -161,12 +166,49 @@ async function main() {
       );
     }
 
-    let links = res.get('Link') || '';
-    if (links) links += ', ';
-    links += '</dist/index.js>; rel="modulepreload"; async';
-    if (links) links += ', ';
-    links += `<${moduleUrl}>; rel="modulepreload"; async`;
-    res.set('Link', links);
+    const loadImportTree: (url: string) => Promise<Import> = async (url) => {
+      const { imports } = await snowpackServer.loadUrl(url, {
+        isSSR: true,
+        encoding: 'utf-8',
+      });
+      if (imports.length === 0) return { url };
+      return {
+        url,
+        imports: await Promise.all(
+          imports
+            // We don't use CSS proxies (remove-css-proxies.ts)
+            .filter((imp) => !imp.specifier.endsWith('.css.proxy.js'))
+            .map(async (imp) => await loadImportTree(imp.specifier)),
+        ),
+      };
+    };
+    const getTreeLayers: (nodes: Import[]) => String[][] = (nodes) => {
+      const urls = nodes.map((node) => node.url);
+      const imports = nodes.flatMap((node) => node.imports ?? []);
+      if (imports.length === 0) return [urls];
+      return [urls, ...getTreeLayers(imports)];
+    };
+    const removeDuplicatesInLayers: (layers: String[][]) => Set<String>[] = (
+      layers,
+    ) => {
+      const all = new Set<String>();
+      const wut = layers
+        .map((layer) => {
+          const layerSet = new Set(layer.filter((node) => !all.has(node)));
+          layerSet.forEach((node) => all.add(node));
+          return layerSet;
+        })
+        .filter((layer) => layer.size > 0);
+      return wut;
+    };
+
+    const moduleTree = await loadImportTree(moduleUrl);
+    const indexTree = await loadImportTree('/dist/index.js');
+    const moduleLayers = getTreeLayers([indexTree, moduleTree]);
+    const uniqueModulesLayers = removeDuplicatesInLayers(moduleLayers);
+    const modules = uniqueModulesLayers.flatMap((layer) => [...layer]);
+    console.log('modules:', modules);
+    modules.forEach((module) => res.links({ modulepreload: module }));
 
     // ExpressJS is dumb and doesn't default to utf-8 when using .write()
     res.contentType('text/html; charset=utf-8');
