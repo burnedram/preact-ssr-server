@@ -95,12 +95,13 @@ async function main() {
 
     const moduleUrl = `/${req.params.module}`;
     console.log('moduleUrl:', moduleUrl);
-    if (!moduleUrl) {
+    if (!req.params.module) {
       res.status(400).json({
         error: {
           message: 'Please specify a module',
         },
       });
+      return;
     }
 
     const moduleExport = req.query.export ?? 'default';
